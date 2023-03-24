@@ -1,0 +1,241 @@
+<html>
+
+<head>
+    <title>Shortest Job First Scheduling Algorithm</title>
+</head>
+
+<body>
+    <script>
+        var max_process = 5;
+        var min_process = 1;
+        var r = document.getElementById("process").value;
+
+
+        function deleteChild(tbl) {
+            while (tbl.firstChild) {
+                tbl.removeChild(tbl.firstChild);
+            }
+        }
+
+        function randomNumberGenerate() {
+            max = max_process;
+            min = min_process;
+            return parseInt(Math.random() * (max - min) + min);
+        }
+
+
+        function addProcess() {
+            var table = document.getElementById("processTable");
+            deleteChild(table);
+            table.setAttribute("border", "1");
+            var r = document.getElementById("process").value
+            var input = document.createElement('input');
+
+            for (var i = 0; i <= r; i++) {
+                if (i == 0) {
+                    var row = table.insertRow(i);
+                    var cell = row.insertCell();
+                    cell.innerHTML = "Process ID";
+                    var cell = row.insertCell();
+                    cell.innerHTML = "Arrival Time";
+                    var cell = row.insertCell();
+                    cell.innerHTML = "Burst Time";
+                    continue;
+                }
+                else {
+                    var row = table.insertRow(i);
+                    var input = document.createElement('span');
+                    var cell = row.insertCell();
+                    cell.id = i + "c" + 0;
+                    input.style.width = "100%";
+                    input.id = i + "" + 0;
+                    input.innerHTML = "P" + i;
+                    cell.appendChild(input);
+
+                    var input = document.createElement('input');
+                    var cell = row.insertCell();
+                    cell.id = i + "c" + 1;
+                    input.type = "number";
+                    input.min = "0";
+                    input.max = "10";
+                    input.style.width = "100%";
+                    input.id = i + "" + 1;
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                    var input = document.createElement('input');
+                    var cell = row.insertCell();
+                    cell.id = i + "c" + 2;
+                    input.type = "number";
+                    input.min = "0";
+                    input.max = "10";
+                    input.style.width = "100%";
+                    input.id = i + "" + 2;
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                }
+            }
+        }
+
+        function randomFill() {
+            var r = document.getElementById('process').value
+            for (var i = 1; i <= r; i++) {
+                document.getElementById(i + "" + 1).value = randomNumberGenerate();
+                document.getElementById(i + "" + 2).value = randomNumberGenerate();
+            }
+        }
+
+        function SGF() {
+            
+            class Process {
+                constructor(pid, bt, art) {
+                    this.pid = pid; // Process ID
+                    this.bt = bt; // Burst Time
+                    this.art = art; // Arrival Time
+                }
+            }
+
+
+            function findWaitingTime(proc, n, wt) {
+                let rt = new Array(n);
+                for (let i = 0; i < n; i++) {
+                    rt[i] = proc[i].bt;
+                }
+
+                let complete = 0, t = 0, minm = Number.MAX_VALUE;
+                let shortest = 0, finish_time;
+                let check = false;
+
+                while (complete != n) {
+                    for (let j = 0; j < n; j++) {
+                        if ((proc[j].art <= t) && (rt[j] < minm) && rt[j] > 0) {
+                            minm = rt[j];
+                            shortest = j;
+                            check = true;
+                        }
+                    }
+
+                    if (check == false) {
+                        t++;
+                        continue;
+                    }
+
+                    rt[shortest]--;
+                    minm = rt[shortest];
+                    if (minm == 0) {
+                        minm = Number.MAX_VALUE;
+                    }
+                    if (rt[shortest] == 0) {
+                        complete++;
+                        check = false;
+                        finish_time = t + 1;
+                        wt[shortest] = finish_time - parseInt(proc[shortest].bt) - parseInt(proc[shortest].art);
+
+                        if (wt[shortest] < 0) {
+                            wt[shortest] = 0;
+                        }
+                    }
+                    t++;
+                }
+            }
+
+            function findTurnAroundTime(proc, n, wt, tat) {
+                for (let i = 0; i < n; i++)
+                    tat[i] = parseInt(proc[i].bt) + parseInt(wt[i]);
+            }
+
+            function findavgTime(proc, n) {
+                let wt = new Array(n);
+                let tat = new Array(n);
+                let total_wt = 0;
+                let total_tat = 0;
+
+                findWaitingTime(proc, n, wt);
+
+                findTurnAroundTime(proc, n, wt, tat);
+
+                var table = document.getElementById("finalTable");
+                deleteChild(table); 
+                table.setAttribute("border", "1");
+                var i = 0;
+                for (let i = 0; i < n; i++) {
+                    total_wt += parseInt(wt[i]);
+                    total_tat += parseInt(tat[i]);
+                }
+                for(i=0; i<=n; i++) {
+                    if(i==0) {
+                        var row = table.insertRow();
+                        var cell = row.insertCell();
+                        cell.innerHTML = "Processes";
+                        var cell = row.insertCell();
+                        cell.innerHTML = "Burst Time";
+                        var cell = row.insertCell();
+                        cell.innerHTML = "Waiting Time";
+                        var cell = row.insertCell();
+                        cell.innerHTML = "Turn Around Time";
+                    }
+                    else {
+                        var row = table.insertRow(i);
+                        var cell = row.insertCell();
+                        cell.innerHTML = proc[i-1].pid;
+                        var cell = row.insertCell();
+                        cell.innerHTML = proc[i-1].bt;
+                        var cell = row.insertCell();
+                        cell.innerHTML = wt[i-1];
+                        var cell = row.insertCell();
+                        cell.innerHTML = tat[i-1];
+                    }
+                }
+                
+               var row = table.insertRow();
+               var cell = row.insertCell();
+               cell.innerHTML = "Average Waiting Time";
+               var cell = row.insertCell();
+               cell.colSpan = "3";
+               cell.innerHTML = (total_wt/n);
+               var row = table.insertRow();
+               var cell = row.insertCell();
+               cell.innerHTML = "Average Turn Around Time";
+               var cell = row.insertCell();
+               cell.colSpan = "3";
+               cell.innerHTML = (total_tat/n);
+            }
+
+            r = document.getElementById('process').value;
+            let proc = [];
+            for (var i = 1; i <= r; i++) {
+                proc.push(new Process(i, document.getElementById(i + "" + 2).value, document.getElementById(i + "" + 1).value));
+            }
+
+            findavgTime(proc, r); //main function
+        }
+    </script>
+<div style="font-family: Product Sans; font-size: 20;">
+    <h1 style="text-align: center;">SHORTEST JOB FIRST SCHEDULING</h1>
+    <div>
+        <label>Number of Processes: </label>
+        <input type="number" id="process" required="true" min="0" max="5" style="width: 40" autocomplete="off">
+        <br><br>
+
+    </div>
+
+    <div>
+        <table id="processTable"></table>
+        <br><br>
+    </div>
+
+    <div>
+        <button type="submit" id="addprocess" onclick="addProcess()" style="font-family: Product Sans;">Add Processes</button>
+        <br><br><br>
+    </div>
+
+    <input type="button" id="fill_random" value="Fill Random" onclick="randomFill()" style="font-family: Product Sans;">
+    <input type="button" value="Start" id="startButton" onclick="SGF()" style="font-family: Product Sans;">
+    <br><br>
+
+    <div>
+        <table id="finalTable"></table>
+    </div>
+</div>
+</body>
+
+</html>
