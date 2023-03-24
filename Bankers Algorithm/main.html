@@ -1,0 +1,367 @@
+    <html>
+
+<head>
+    <title>Banker's Algorithm</title>
+</head>
+
+<body>
+    <script>
+        var max_process = 5;
+        var min_process = 1;
+        var r = document.getElementById("process").value;
+        function deleteChild(tbl) {
+            while (tbl.firstChild) {
+                tbl.removeChild(tbl.firstChild);
+            }
+        }
+
+        function randomNumberGenerate() {
+            max = max_process;
+            min = min_process;
+            return parseInt(Math.random() * (max - min) + min);
+        }
+
+
+        function addProcess() {
+            var table = document.getElementById("processTable");
+            deleteChild(table);
+            table.setAttribute("border", "1");
+            var r = parseInt(document.getElementById("process").value);
+            var input = document.createElement('input');
+
+            for (var i = 0; i <= r + 1; i++) {
+                if (i == 0) {
+                    var row = table.insertRow();
+                    var cell = row.insertCell();
+                    cell.innerHTML = "Process";
+                    var cell = row.insertCell();
+                    cell.innerHTML = "Maximum";
+                    cell.colSpan = "3";
+                    var cell = row.insertCell();
+                    cell.innerHTML = "Currently Allocated";
+                    cell.colSpan = "3";
+                }
+                else if (i == 1) {
+                    var row = table.insertRow();
+                    var cell = row.insertCell();
+                    cell.innerHTML = ""
+                    var cell = row.insertCell();
+                    cell.innerHTML = "A";
+                    var cell = row.insertCell();
+                    cell.innerHTML = "B";
+                    var cell = row.insertCell();
+                    cell.innerHTML = "C";
+                    var cell = row.insertCell();
+                    cell.innerHTML = "A";
+                    var cell = row.insertCell();
+                    cell.innerHTML = "B";
+                    var cell = row.insertCell();
+                    cell.innerHTML = "C";
+                }
+
+                else {
+                    var row = table.insertRow(i);
+                    var input = document.createElement('span');
+                    var cell = row.insertCell();
+                    cell.id = i + "c" + 0;
+                    input.style.width = "100%";
+                    input.id = i + "" + 0;
+                    input.innerHTML = "P" + (i - 1);
+                    cell.appendChild(input);
+
+                    var input = document.createElement('input');
+                    var cell = row.insertCell();
+                    input.type = "number";
+                    input.min = "0";
+                    input.max = "10";
+                    input.id = i + "" + 1;
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                    var input = document.createElement('input');
+                    var cell = row.insertCell();
+                    input.type = "number";
+                    input.min = "0";
+                    input.max = "10";
+                    input.id = i + "" + 2;
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                    var input = document.createElement('input');
+                    var cell = row.insertCell();
+                    input.type = "number";
+                    input.min = "0";
+                    input.max = "10";
+                    input.id = i + "" + 3;
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                    var input = document.createElement('input');
+                    var cell = row.insertCell();
+                    input.type = "number";
+                    input.min = "0";
+                    input.max = "10";
+                    input.id = i + "" + 4;
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                    var input = document.createElement('input');
+                    var cell = row.insertCell();
+                    input.type = "number";
+                    input.min = "0";
+                    input.max = "10";
+                    input.id = i + "" + 5;
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                    var input = document.createElement('input');
+                    var cell = row.insertCell();
+                    input.type = "number";
+                    input.min = "0";
+                    input.max = "10";
+                    input.id = i + "" + 6;
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                }
+            }
+        }
+
+        function find_avai() {
+            var a = parseInt(document.getElementById("A").value);
+            var b = parseInt(document.getElementById("B").value);
+            var c = parseInt(document.getElementById("C").value);
+            var r = parseInt(document.getElementById("process").value);
+            var x = 0;
+            var y = 0;
+            var z = 0;
+            for (var i = 2; i <= r + 1; i++) {
+                var x = x + parseInt(document.getElementById(i + "" + 4).value);
+                var y = y + parseInt(document.getElementById(i + "" + 5).value);
+                var z = z + parseInt(document.getElementById(i + "" + 6).value);
+            }
+            document.getElementById(2 + "avl1").value = a - x;
+            document.getElementById(2 + "avl2").value = b - y;
+            document.getElementById(2 + "avl3").value = c - z;
+
+        }
+
+
+        function find_need() {
+            var r = parseInt(document.getElementById("process").value);
+            for (var i = 2; i <= r + 1; i++) {
+                for (var j = 1; j <= 3; j++) {
+                    document.getElementById(i + "rn" + j).value = parseInt(document.getElementById(i + "" + j).value) - parseInt(document.getElementById(i + "" + (j + 3)).value);
+                }
+            }
+        }
+
+
+        function run_algo() {
+
+            var table = document.getElementById("finalTable");
+            deleteChild(table);
+            table.setAttribute("border", "1");
+            var r = parseInt(document.getElementById("process").value);
+            for (var i = 0; i <= r + 2; i++) {
+                if (i == 0) {
+                    var row = table.insertRow();
+                    var cell = row.insertCell();
+                    cell.innerHTML = "Remaining Need";
+                    cell.colSpan = "3";
+                    var cell = row.insertCell();
+                    cell.innerHTML = "Currently Available";
+                    cell.colSpan = "3";
+                }
+                else if (i == 1) {
+                    var row = table.insertRow();
+                    var cell = row.insertCell();
+                    cell.innerHTML = "A";
+                    var cell = row.insertCell();
+                    cell.innerHTML = "B";
+                    var cell = row.insertCell();
+                    cell.innerHTML = "C";
+                    var cell = row.insertCell();
+                    cell.innerHTML = "A";
+                    var cell = row.insertCell();
+                    cell.innerHTML = "B";
+                    var cell = row.insertCell();
+                    cell.innerHTML = "C";
+                }
+                else if (i == r + 2) {
+                    var row = table.insertRow();
+                    var cell = row.insertCell();
+                    var input = document.createElement('input');
+                    input.id = "last" + 1;
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                    var cell = row.insertCell();
+                    var input = document.createElement('input');
+                    input.id = "last" + 2;
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                    var cell = row.insertCell();
+                    var input = document.createElement('input');
+                    input.id = "last3" + 1;
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                    var cell = row.insertCell();
+                    var input = document.createElement('input');
+                    input.id = "last4" + 4;
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                    var cell = row.insertCell();
+                    var input = document.createElement('input');
+                    input.id = "last5" + 5;
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                    var cell = row.insertCell();
+                    var input = document.createElement('input');
+                    input.id = "last6" + 6;
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                }
+                else {
+                    var input = document.createElement('input');
+                    var row = table.insertRow();
+                    var cell = row.insertCell();
+                    input.id = i + "rn" + 1;
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                    var cell = row.insertCell();
+                    var input = document.createElement('input');
+                    input.id = i + "rn" + 2;
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                    var cell = row.insertCell();
+                    var input = document.createElement('input');
+                    input.id = i + "rn" + 3;
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                    var cell = row.insertCell();
+                    var input = document.createElement('input');
+                    input.id = i + "avl1";
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                    var cell = row.insertCell();
+                    var input = document.createElement('input');
+                    input.id = i + "avl2";
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+                    var cell = row.insertCell();
+                    var input = document.createElement('input');
+                    input.id = i + "avl3";
+                    input.innerHTML = i;
+                    cell.appendChild(input);
+
+                }
+            }
+            find_avai();
+            find_need();
+            var k = 1;
+            var q = 1;
+            for (var x = 2; x <= r + 1; x++) {
+                var x1 = parseInt(document.getElementById(x + "avl1").value);
+                var x2 = parseInt(document.getElementById(x + "avl2").value);
+                var x3 = parseInt(document.getElementById(x + "avl3").value);
+
+                for (var i = k; i <= (r + 1); i++) {
+
+                    var ex1 = parseInt(document.getElementById((i + 1) + "" + 4).value);
+                    var ex2 = parseInt(document.getElementById((i + 1) + "" + 5).value);
+                    var ex3 = parseInt(document.getElementById((i + 1) + "" + 6).value);
+                    if (ex1 != 0 || ex2 != 0 || ex3 != 0) {
+                        if (x1 >= parseInt(document.getElementById((i + 1) + "rn" + 1).value) && x2 >= parseInt(document.getElementById((i + 1) + "rn" + 2).value) && x3 >= parseInt(document.getElementById((i + 1) + "rn" + 3).value)) {
+                            if (x == r + 1) {
+                                document.getElementById('p' + q).value = 'P' + i;
+                                document.getElementById("last4" + 4).value = parseInt(document.getElementById(x + "avl1").value) + parseInt(document.getElementById((i + 1) + "" + 4).value);
+                                document.getElementById("last5" + 5).value = parseInt(document.getElementById(x + "avl2").value) + parseInt(document.getElementById((i + 1) + "" + 5).value);
+                                document.getElementById("last6" + 6).value = parseInt(document.getElementById(x + "avl3").value) + parseInt(document.getElementById((i + 1) + "" + 6).value);
+                                document.getElementById((i + 1) + "" + 4).value = 0;
+                                document.getElementById((i + 1) + "" + 5).value = 0;
+                                document.getElementById((i + 1) + "" + 6).value = 0;
+                            }
+                            else {
+                                document.getElementById('p' + q).value = 'P' + i;
+                                document.getElementById((x + 1) + "avl1").value = parseInt(document.getElementById(x + "avl1").value) + parseInt(document.getElementById((i + 1) + "" + 4).value);
+                                document.getElementById((x + 1) + "avl2").value = parseInt(document.getElementById(x + "avl2").value) + parseInt(document.getElementById((i + 1) + "" + 5).value);
+                                document.getElementById((x + 1) + "avl3").value = parseInt(document.getElementById(x + "avl3").value) + parseInt(document.getElementById((i + 1) + "" + 6).value);
+                                document.getElementById((i + 1) + "" + 4).value = 0;
+                                document.getElementById((i + 1) + "" + 5).value = 0;
+                                document.getElementById((i + 1) + "" + 6).value = 0;
+                            }
+                            k = i + 1;
+                            if (k == r + 1) {
+                                k = 1;
+                            }
+                            q = q + 1;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (q == (r+1)) {
+                alert("SAFE");
+            }
+
+        }
+
+        function example() {
+
+            document.getElementById('process').value = 5;
+            var r = parseInt(document.getElementById('process').value);
+            document.getElementById("A").value = 10;
+            document.getElementById("B").value = 5;
+            document.getElementById("C").value = 7;
+            n = [2, 0, 0, 3, 3, 4, 1, 1, 2, 2, 2, 2, 2, 0, 3, 2, 0, 9, 0, 0, 2, 2, 2, 3, 0, 1, 0, 3, 5, 7];
+            for (var i = 2; i <= r + 1; i++) {
+                document.getElementById(i + "" + 1).value = n.pop();
+                document.getElementById(i + "" + 2).value = n.pop();
+                document.getElementById(i + "" + 3).value = n.pop();
+                document.getElementById(i + "" + 4).value = n.pop();
+                document.getElementById(i + "" + 5).value = n.pop();
+                document.getElementById(i + "" + 6).value = n.pop();
+            }
+
+        }
+
+    </script>
+    <div style="font-family: Product Sans; font-size: 20;">
+        <h1 style="text-align: center;">BANKER'S ALGORITHM</h1>
+        <div>
+            <label>No of Processes</label>
+            <input type="number" id="process" required="true" min="0" max="10" style="width: 40" autocomplete="off">
+            <label>No of Instances of Resource A</label>
+            <input type="number" id="A" required="true" min="0" max="10" style="width: 40" autocomplete="off">
+            <label>No of Instances of Resource B</label>
+            <input type="number" id="B" required="true" min="0" max="10" style="width: 40" autocomplete="off">
+            <label>No of Instances of Resource C</label>
+            <input type="number" id="C" required="true" min="0" max="10" style="width: 40" autocomplete="off">
+            <br><br>
+
+        </div>
+
+        <div>
+            <table id="processTable"></table>
+            <br><br>
+        </div>
+        <div>
+            <table id="finalTable"></table>
+        </div>
+        <div>
+            <h4>Process Sequence :</h4><br>
+            <input id="p1" size="2" maxlength="2">&nbsp
+            <input id="p2" size="2" maxlength="2">&nbsp
+            <input id="p3" size="2" maxlength="2">&nbsp
+            <input id="p4" size="2" maxlength="2">&nbsp
+            <input id="p5" size="2" maxlength="2">
+        </div>
+        <div>
+            <button type="submit" id="addprocess" onclick="addProcess()" style="font-family: Product Sans;">Add
+                Processes</button>
+            <br><br><br>
+        </div>
+        <input type="button" id="fill_random" value="Example Values" onclick="example()"
+            style="font-family: Product Sans;">
+        <input type="button" value="Start" id="startButton" onclick="run_algo()" style="font-family: Product Sans;">
+        <br><br>
+
+    </div>
+</body>
+
+</html>
